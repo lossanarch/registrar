@@ -1,6 +1,7 @@
 package registrar
 
 import (
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"log"
 	"net"
 	"strings"
@@ -132,6 +133,8 @@ func findZone(host string, r route53Client) *route53.HostedZone {
 
 	zone := strings.Join(parts[1:len(parts)], ".")
 
+	log.Println("Attempting to find zone", zone)
+
 	if zone == "" {
 		panic("unable to find zone")
 	}
@@ -157,6 +160,9 @@ func getZone(zone string, r route53Client) *route53.HostedZone {
 			MaxItems: aws.String("1"),
 		})
 	if err != nil {
+		if awsErr, ok := err.(awserr.Error); ok {
+			panic(awsErr.Error())
+		}
 		return nil
 	}
 
