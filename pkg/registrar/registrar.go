@@ -83,10 +83,9 @@ func getHostIP() net.IP {
 
 	if !m.Available() {
 		log.Println("No metadata detected, using dummy ip")
-		ip = "127.0.0.1"
-	}
 
-	return net.ParseIP(ip)
+		return net.ParseIP("127.0.0.1")
+	}
 
 	ip, err := m.GetMetadata("/public-ipv4")
 
